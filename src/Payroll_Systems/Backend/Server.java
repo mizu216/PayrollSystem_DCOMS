@@ -23,4 +23,9 @@ public class Server extends UnicastRemoteObject implements Interface {
     public boolean adminLogin(String username, String password)throws RemoteException{
         return (username.equals("Admin123") && password.equals("admin123"));
     }
+    
+    public boolean adminRegisterHR(String Username,String Name,String Password,String icNo,String staffType){
+        return false;
+    
+    }
 }

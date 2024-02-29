@@ -18,7 +18,8 @@ public class AdminLoginPage implements ActionListener{
                 usernameInput.setText("");
                 passwordInput.setText("");
                 if (object.adminLogin(username, password)== true){
-                    System.out.println("ok");
+                    x.setVisible(false);
+                    Client.adminMainPage.getJFrame().setVisible(true);
                 }
                 else{
                     System.out.println("not ok");
@@ -43,7 +44,7 @@ public class AdminLoginPage implements ActionListener{
     private Panel p0,p1,p2,p3,p4, p5;
     private Label usernameText,passwordText, title;
     private TextField usernameInput,passwordInput;
-    private Button login,register,exit;
+    private Button login,exit;
     public AdminLoginPage(){
         x = new JFrame("Admin Login Page");
         x.setSize(500,500);
@@ -83,6 +84,6 @@ public class AdminLoginPage implements ActionListener{
         x.add(p1);
         x.add(p4);
         x.getContentPane().setBackground(Color.lightGray);
-        x.setVisible(true);
+        x.setVisible(false);
     }
 }
