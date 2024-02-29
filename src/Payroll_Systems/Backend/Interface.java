@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Payroll_Systems;
+package Payroll_Systems.Backend;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

@@ -1,5 +1,6 @@
-package Payroll_Systems;
+package Payroll_Systems.Frontend;
 
+import Payroll_Systems.Backend.Interface;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
