@@ -12,12 +12,14 @@ package Payroll_Systems.Frontend;
 public class Client {
     public static AdminLoginPage adminLoginPage;
     public static AdminMainPage adminMainPage;
+    public static AdminRegisterHRPage adminRegisterHRPage;
     public static MainPage mainPage;
 
     
     public static void main(String[] args) {
         adminLoginPage = new AdminLoginPage();
         adminMainPage = new AdminMainPage();
+        adminRegisterHRPage = new AdminRegisterHRPage();
         mainPage = new MainPage();
     }
 }

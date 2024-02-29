@@ -11,6 +11,10 @@ public class AdminMainPage implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e){
         try{
+            if(e.getSource()==register){
+                x.setVisible(false);
+                Client.adminRegisterHRPage.getJFrame().setVisible(true);
+            }
         }
         
         catch(Exception ex){
