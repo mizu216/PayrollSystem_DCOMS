@@ -5,10 +5,21 @@
  */
 package Payroll_Systems;
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+
 /**
  *
  * @author limzi
  */
-public class Server {
+public class Server extends UnicastRemoteObject implements Interface {
+    public Server()throws RemoteException{
+        super();
+    }
     
+    @Override
+    
+    public boolean adminLogin(String username, String password)throws RemoteException{
+        return (username.equals("Admin123") && password.equals("admin123"));
+    }
 }

@@ -5,10 +5,13 @@
  */
 package Payroll_Systems;
 
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
 /**
  *
  * @author limzi
  */
-public class Interface {
-    
+public interface Interface extends Remote {
+    public boolean adminLogin(String username, String password)throws RemoteException;
 }

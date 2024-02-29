@@ -5,6 +5,10 @@
  */
 package Payroll_Systems;
 
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+
 /**
  *
  * @author limzi
@@ -14,8 +18,9 @@ public class RMIregistry {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        System.out.println("Hi");
+    public static void main(String[] args)throws RemoteException {
+        Registry reg = LocateRegistry.createRegistry(1044);
+        reg.rebind("payroll", new Server());
     }
     
 }
