@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.Naming;
+import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 public class AdminMainPage implements ActionListener{
@@ -14,6 +15,14 @@ public class AdminMainPage implements ActionListener{
             if(e.getSource()==register){
                 x.setVisible(false);
                 Client.adminRegisterHRPage.getJFrame().setVisible(true);
+            }
+            else if (e.getSource()==staff){
+                Interface object = (Interface)Naming.lookup("rmi://localhost:1044/payroll");
+                ArrayList<String> hrData = object.adminViewHR();
+                for (int i = 0; i < hrData.size(); i++) {
+                    String data = hrData.get(i);
+                    System.out.println(data);
+                }
             }
         }
         

@@ -80,15 +80,16 @@ public class Server extends UnicastRemoteObject implements Interface {
     }
     
     @Override
-    public String[] adminViewHR()throws RemoteException{
-        List<String> hrDataList = new ArrayList<>();
+    public ArrayList<String> adminViewHR()throws RemoteException{
+        ArrayList<String> hrDataList = new ArrayList<>();
         try{
             Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/payroll_system_staff", "root", "root");
             PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM HR_Table");
             ResultSet rs = pstmt.executeQuery();
             
             while (rs.next()) {
-                String hrData = rs.getString("Username") + "\n" + rs.getString("Name") + "\n" + rs.getString("IC_No");
+                String hrData = rs.getString("Username") + "," + rs.getString("Name") + "," + rs.getString("IC_No");
+                System.out.println(hrData);
                 hrDataList.add(hrData);
             }
             rs.close();
@@ -98,6 +99,6 @@ public class Server extends UnicastRemoteObject implements Interface {
         catch(SQLException e){
             e.printStackTrace();
         }
-        return hrDataList.toArray(new String[0]);
+        return hrDataList;
     }
 }
