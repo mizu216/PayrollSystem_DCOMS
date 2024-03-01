@@ -12,6 +12,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -39,22 +41,25 @@ public class Server extends UnicastRemoteObject implements Interface {
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
                 conn.commit();
+                rs.close();
+                pstmt.close();
                 conn.close();
                 return 1;
             }
-            if(icNo.length()!=12){
+            if(icNo.length()!=12||isParseSuccessful(icNo) == false){
                 conn.commit();
                 conn.close();
                 return 2;
             }
             else{
-                long IcNum = Long.parseLong(icNo);
-                PreparedStatement pstmt2 = conn.prepareStatement("INSERT INTO HR_Table (USERNAME, PASSWORD, NAME,IC_NO) VALUES (?, ?, ?, ?)");
+                PreparedStatement pstmt2 = conn.prepareStatement("INSERT INTO HR_Table (Username, Password, name,IC_No) VALUES (?, ?, ?, ?)");
                 pstmt2.setString(1, username);
                 pstmt2.setString(2, password);
                 pstmt2.setString(3, name);
-                pstmt2.setLong(4, IcNum);
+                pstmt2.setString(4,icNo);
+                pstmt2.executeUpdate();
                 conn.commit();
+                pstmt2.close();
                 conn.close();
                 return 3;
             }
@@ -67,10 +72,32 @@ public class Server extends UnicastRemoteObject implements Interface {
     
     private static boolean isParseSuccessful(String numberString) {
         try {
-            Integer.parseInt(numberString);
+            Long.parseLong(numberString);
             return true;
         } catch (NumberFormatException e) {
             return false;
         }
+    }
+    
+    @Override
+    public String[] adminViewHR()throws RemoteException{
+        List<String> hrDataList = new ArrayList<>();
+        try{
+            Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/payroll_system_staff", "root", "root");
+            PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM HR_Table");
+            ResultSet rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+                String hrData = rs.getString("Username") + "\n" + rs.getString("Name") + "\n" + rs.getString("IC_No");
+                hrDataList.add(hrData);
+            }
+            rs.close();
+            pstmt.close();
+            conn.close();
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
+        return hrDataList.toArray(new String[0]);
     }
 }

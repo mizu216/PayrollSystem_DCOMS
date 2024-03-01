@@ -30,7 +30,7 @@ public class AdminMainPage implements ActionListener{
     private Panel p0,p1,p2,p3,p4, p5;
     private Label usernameText,passwordText, title;
     private TextField usernameInput,passwordInput;
-    private Button modify,view,register;
+    private Button hr,staff,register;
     public AdminMainPage(){
         x = new JFrame("Admin Login Page");
         x.setSize(500,500);
@@ -44,17 +44,17 @@ public class AdminMainPage implements ActionListener{
         title.setFont(new Font("SansSerif", Font.BOLD, 14));
         p0.add(title);
         
-        modify = new Button("Modify Profile");
-        p1.add(modify);
+        hr = new Button("View HR");
+        p1.add(hr);
 
-        view = new Button("View Staff");
-        p2.add(view);
+        staff = new Button("View Staff");
+        p2.add(staff);
 
         register = new Button("Register New HR");
         p3.add(register);
 
-        modify.addActionListener(this);
-        view.addActionListener(this);
+        hr.addActionListener(this);
+        staff.addActionListener(this);
         register.addActionListener(this);
         
         x.setLayout(new GridLayout(4,1));

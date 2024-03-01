@@ -69,7 +69,7 @@ public class AdminRegisterHRPage implements ActionListener{
     private Button confirm,back;
     public AdminRegisterHRPage(){
         x = new JFrame("Register HR Page");
-        x.setSize(800,400);
+        x.setSize(500,500);
         x.setLocation(700,300);
         p0 = new Panel(new GridLayout(2,1));
         p1 = new Panel();
@@ -105,14 +105,13 @@ public class AdminRegisterHRPage implements ActionListener{
         back.addActionListener(this);
         p6.add(back);
         p7.add(confirm);
-        p8.add(back);
-        p8.add(confirm);
+        p8.add(p6);
+        p8.add(p7);
         
         x.setLayout(new GridLayout(4,1));
         x.add(p0);
         x.add(p2);
         x.add(p4);
-        x.add(p6);
         x.add(p8);
     }
    
