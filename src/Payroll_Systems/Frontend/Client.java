@@ -12,6 +12,7 @@ package Payroll_Systems.Frontend;
 public class Client {
     public static AdminLoginPage adminLoginPage;
     public static AdminMainPage adminMainPage;
+    public static AdminViewHRPage adminViewHRPage;
     public static AdminRegisterHRPage adminRegisterHRPage;
     public static MainPage mainPage;
 
@@ -19,6 +20,7 @@ public class Client {
     public static void main(String[] args) {
         adminLoginPage = new AdminLoginPage();
         adminMainPage = new AdminMainPage();
+        adminViewHRPage = new AdminViewHRPage();
         adminRegisterHRPage = new AdminRegisterHRPage();
         mainPage = new MainPage();
     }

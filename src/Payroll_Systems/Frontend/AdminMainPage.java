@@ -16,13 +16,14 @@ public class AdminMainPage implements ActionListener{
                 x.setVisible(false);
                 Client.adminRegisterHRPage.getJFrame().setVisible(true);
             }
-            else if (e.getSource()==staff){
+            else if (e.getSource()==hr){
                 Interface object = (Interface)Naming.lookup("rmi://localhost:1044/payroll");
-                ArrayList<String> hrData = object.adminViewHR();
-                for (int i = 0; i < hrData.size(); i++) {
-                    String data = hrData.get(i);
-                    System.out.println(data);
+                String[][] hrData = object.adminViewHR();
+                for (int i = 0; i < hrData.length; i++) {
+                    Client.adminViewHRPage.getTableModel().insertRow(i, hrData[i]);
                 }
+                x.setVisible(false);
+                Client.adminViewHRPage.getJFrame().setVisible(true);
             }
         }
         

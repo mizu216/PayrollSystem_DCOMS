@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public interface Interface extends Remote {
     public boolean adminLogin(String username, String password)throws RemoteException;
     public int adminRegisterHR(String username,String password,String name,String icNo)throws RemoteException;
-    public ArrayList<String> adminViewHR()throws RemoteException;
+    public String[][] adminViewHR()throws RemoteException;
 }
 
 //asdasda

@@ -80,20 +80,31 @@ public class Server extends UnicastRemoteObject implements Interface {
     }
     
     @Override
-    public ArrayList<String> adminViewHR()throws RemoteException{
-        ArrayList<String> hrDataList = new ArrayList<>();
+    public String[][] adminViewHR()throws RemoteException{
+        String[][] hrDataList = null;
         try{
             Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/payroll_system_staff", "root", "root");
-            PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM HR_Table");
+            PreparedStatement pstmt = conn.prepareStatement("SELECT COUNT(*) AS rowCount FROM HR_Table");
             ResultSet rs = pstmt.executeQuery();
-            
-            while (rs.next()) {
-                String hrData = rs.getString("Username") + "," + rs.getString("Name") + "," + rs.getString("IC_No");
-                System.out.println(hrData);
-                hrDataList.add(hrData);
+            int rowCount = 0;
+            if (rs.next()) {
+                rowCount = rs.getInt("rowCount");
             }
             rs.close();
             pstmt.close();
+            
+            hrDataList = new String[rowCount][3];
+            PreparedStatement pstmt2 = conn.prepareStatement("SELECT * FROM HR_Table");
+            ResultSet rs2 = pstmt2.executeQuery();
+            int i=0;
+            while (rs2.next()) {
+                hrDataList[i][0] = rs2.getString("Username");                
+                hrDataList[i][1] = rs2.getString("Name");
+                hrDataList[i][2] = rs2.getString("IC_No"); 
+                i++;
+            }
+            rs2.close();
+            pstmt2.close();
             conn.close();
         }
         catch(SQLException e){
