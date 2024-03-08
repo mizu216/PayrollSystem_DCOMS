@@ -21,12 +21,11 @@ import javax.swing.table.DefaultTableModel;
 public class AdminViewHRPage implements ActionListener{
     
     private JFrame x;
-    private Panel p0,p1,p2,p3,p4;
+    private Panel p0,p1;
     private JTable table;
     private DefaultTableModel tableModel;
-    private Label CD,carSerialNo;
-    private TextField carNoInput;
-    private Button book,back;
+    private Label CD;
+    private Button back;
     public AdminViewHRPage(){
         x = new JFrame("Customer Booking Page");
         x.setSize(1200,500);
@@ -35,10 +34,6 @@ public class AdminViewHRPage implements ActionListener{
         p0 = new Panel();
         p0.setLayout(new BorderLayout());
         p1 = new Panel();
-        p1.setLayout(new GridLayout(3,1));
-        p2 = new Panel();
-        p3 = new Panel();
-        p4 = new Panel();
         
         CD = new Label("__HR Detail__",Label.CENTER);
         CD.setFont(new Font(Font.MONOSPACED,Font.BOLD,16));
@@ -52,6 +47,11 @@ public class AdminViewHRPage implements ActionListener{
         p0.add(new JScrollPane(table),BorderLayout.CENTER);
         table.setEnabled(false);
         x.add(p0,BorderLayout.CENTER);
+        
+        back = new Button("Back");
+        back.addActionListener(this);
+        p1.add(back);
+        x.add(p1,BorderLayout.SOUTH);
     }
     
     public JFrame getJFrame(){
@@ -72,7 +72,11 @@ public class AdminViewHRPage implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e){
         try{
-      
+            if(e.getSource()==back){
+                clearAllRow();
+                x.setVisible(false);
+                Client.adminMainPage.getJFrame().setVisible(true);
+            }
         }
         
         catch(Exception ex){

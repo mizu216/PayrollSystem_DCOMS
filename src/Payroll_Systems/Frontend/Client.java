@@ -14,7 +14,11 @@ public class Client {
     public static AdminMainPage adminMainPage;
     public static AdminViewHRPage adminViewHRPage;
     public static AdminRegisterHRPage adminRegisterHRPage;
+    public static HRLoginPage hrLoginPage;
+    public static HRUpdatePasswordPage hrUpdatePasswordPage;
     public static MainPage mainPage;
+    public static String loginUser = null;
+
 
     
     public static void main(String[] args) {
@@ -22,6 +26,8 @@ public class Client {
         adminMainPage = new AdminMainPage();
         adminViewHRPage = new AdminViewHRPage();
         adminRegisterHRPage = new AdminRegisterHRPage();
+        hrLoginPage = new HRLoginPage();
+        hrUpdatePasswordPage = new HRUpdatePasswordPage();
         mainPage = new MainPage();
     }
 }

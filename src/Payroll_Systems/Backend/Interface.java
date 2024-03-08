@@ -18,6 +18,8 @@ public interface Interface extends Remote {
     public boolean adminLogin(String username, String password)throws RemoteException;
     public int adminRegisterHR(String username,String password,String name,String icNo)throws RemoteException;
     public String[][] adminViewHR()throws RemoteException;
+    public boolean hrLogin(String username, String password)throws RemoteException;
+    public boolean hrUpdatePassword(String username, String oldPassword, String newPassword)throws RemoteException;
 }
 
 //asdasda

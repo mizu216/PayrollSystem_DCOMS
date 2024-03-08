@@ -112,4 +112,63 @@ public class Server extends UnicastRemoteObject implements Interface {
         }
         return hrDataList;
     }
+    
+    @Override
+    public boolean hrLogin(String username, String password)throws RemoteException{
+        try{
+            Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/payroll_system_staff", "root", "root");
+            PreparedStatement pstmt = conn.prepareStatement("SELECT Password FROM HR_Table WHERE Username = ?");
+            pstmt.setString(1, username);
+
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                String storedPassword = rs.getString("Password");
+                if (storedPassword.equals(password)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+            rs.close();
+            pstmt.close();
+            conn.close();
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    @Override
+    public boolean hrUpdatePassword(String username, String oldPassword, String newPassword)throws RemoteException{
+        try{
+            Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/payroll_system_staff", "root", "root");
+            PreparedStatement pstmt = conn.prepareStatement("SELECT Password FROM HR_Table WHERE Username = ?");
+            pstmt.setString(1, username);
+
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                String storedPassword = rs.getString("Password");
+                if (storedPassword.equals(oldPassword)) {
+                    System.out.println("good");
+                    pstmt = conn.prepareStatement("UPDATE HR_Table SET Password = ? WHERE Username = ?");
+                    pstmt.setString(1, newPassword);
+                    pstmt.setString(2, username);
+                    int executeUpdate = pstmt.executeUpdate();
+                    if (executeUpdate > 0) {
+                        return true;//sucess
+                    } else {
+                        return false;//errorr modify,try again
+                    }
+                }
+            }
+            rs.close();
+            pstmt.close();
+            conn.close(); 
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

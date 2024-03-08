@@ -25,6 +25,10 @@ public class AdminMainPage implements ActionListener{
                 x.setVisible(false);
                 Client.adminViewHRPage.getJFrame().setVisible(true);
             }
+            else if(e.getSource()==logout){
+                x.setVisible(false);
+                Client.mainPage.getJFrame().setVisible(true);
+            }
         }
         
         catch(Exception ex){
@@ -38,9 +42,8 @@ public class AdminMainPage implements ActionListener{
     }
     private JFrame x;
     private Panel p0,p1,p2,p3,p4, p5;
-    private Label usernameText,passwordText, title;
-    private TextField usernameInput,passwordInput;
-    private Button hr,staff,register;
+    private Label title;
+    private Button hr,staff,register,logout;
     public AdminMainPage(){
         x = new JFrame("Admin Login Page");
         x.setSize(500,500);
@@ -49,6 +52,7 @@ public class AdminMainPage implements ActionListener{
         p1 = new Panel();
         p2 = new Panel();
         p3 = new Panel();
+        p4 = new Panel();
         
         title = new Label("Admin Main Page");
         title.setFont(new Font("SansSerif", Font.BOLD, 14));
@@ -62,16 +66,21 @@ public class AdminMainPage implements ActionListener{
 
         register = new Button("Register New HR");
         p3.add(register);
+        
+        logout = new Button("Logout");
+        p4.add(logout);
 
         hr.addActionListener(this);
         staff.addActionListener(this);
         register.addActionListener(this);
+        logout.addActionListener(this);
         
-        x.setLayout(new GridLayout(4,1));
+        x.setLayout(new GridLayout(5,1));
         x.add(p0);
         x.add(p1);
         x.add(p2);
         x.add(p3);
+        x.add(p4);
         x.getContentPane().setBackground(Color.lightGray);
         x.setVisible(false);
     }
