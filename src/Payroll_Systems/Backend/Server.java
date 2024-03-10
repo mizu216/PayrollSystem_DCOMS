@@ -171,4 +171,42 @@ public class Server extends UnicastRemoteObject implements Interface {
         }
         return false;
     }
+    
+     public boolean hrRegisterStaff(String username,String password,String name,String icNo,String bs,String hra, String da, String allowance, String otp)throws RemoteException{
+        try{
+            Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/payroll_system_staff","root","root");
+            System.out.println("Database Connected");
+            PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM EMPLOYEE_Table WHERE Username = ?");
+            pstmt.setString(1, username);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                conn.commit();
+                rs.close();
+                pstmt.close();
+                conn.close();
+                return false;
+            }
+            else{
+                PreparedStatement pstmt2 = conn.prepareStatement("INSERT INTO EMPLOYEE_Table (username, password, name,ic_no,bs,hra,da,allowance,otp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                pstmt2.setString(1, username);
+                pstmt2.setString(2, password);
+                pstmt2.setString(3, name);
+                pstmt2.setString(4,icNo);
+                pstmt2.setString(5, bs);
+                pstmt2.setString(6, hra);
+                pstmt2.setString(7, da);
+                pstmt2.setString(8,allowance);
+                pstmt2.setString(9,otp);
+                pstmt2.executeUpdate();
+                conn.commit();
+                pstmt2.close();
+                conn.close();
+                return true;
+            }
+        }
+        catch (SQLException e){
+            System.out.println(e);
+            return false;
+        }
+    }
 }

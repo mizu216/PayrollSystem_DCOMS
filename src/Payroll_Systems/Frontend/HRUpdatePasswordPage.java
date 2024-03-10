@@ -33,7 +33,8 @@ public class HRUpdatePasswordPage implements ActionListener{
             }
                         
             else if(e.getSource() == back){
-                System.exit(0);
+                x.setVisible(false);
+                Client.hrMainPage.getJFrame().setVisible(true);
             }
         }
         

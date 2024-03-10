@@ -20,7 +20,7 @@ public class HRLoginPage implements ActionListener{
                 if (object.hrLogin(username, password)== true){
                    Client.loginUser = username;
                    x.setVisible(false);
-                   Client.hrUpdatePasswordPage.getJFrame().setVisible(true);
+                   Client.hrMainPage.getJFrame().setVisible(true);
                 }
                 else{
                     System.out.println("not ok");
