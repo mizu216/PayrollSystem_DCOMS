@@ -26,21 +26,15 @@ public class HRRegisterStaffPage implements ActionListener{
                 String icNo = icNoInput.getText();
                 String password = "staff" + name + icNo;
                 String bs = basicSalaryInput.getText();
-                String hra = hraInput.getText();
-                String da = daInput.getText();
                 String allowance = allowanceInput.getText();
-                String otp = otpInput.getText();
                 Long.parseLong(icNo);
-                Float.parseFloat(bs);
-                Float.parseFloat(hra);
-                Float.parseFloat(da);
-                Float.parseFloat(allowance);
-                Float.parseFloat(otp);
+                Double.parseDouble(bs);
+                Double.parseDouble(allowance);
                 if(icNo.length()!=12){
                     JOptionPane.showMessageDialog(x,"Invalid IC No");
                 }
                 else{
-                    if (object.hrRegisterStaff(username, password, name, icNo, bs, hra, da, allowance, otp) == false){
+                    if (object.hrRegisterStaff(username, password, name, icNo, bs, allowance) == false){
                         JOptionPane.showMessageDialog(x,"Username has been taken");
                     }
                     else{
@@ -53,18 +47,12 @@ public class HRRegisterStaffPage implements ActionListener{
                 String name = nameInput.getText();
                 String icNo = icNoInput.getText();
                 String bs = basicSalaryInput.getText();
-                String hra = hraInput.getText();
-                String da = daInput.getText();
                 String allowance = allowanceInput.getText();
-                String otp = otpInput.getText();
                 usernameInput.setText("");
                 nameInput.setText("");
                 icNoInput.setText("");
                 basicSalaryInput.setText("");
-                hraInput.setText("");
-                daInput.setText("");
                 allowanceInput.setText("");
-                otpInput.setText("");
                 x.setVisible(false);
                 Client.hrMainPage.getJFrame().setVisible(true);
             }
@@ -79,9 +67,9 @@ public class HRRegisterStaffPage implements ActionListener{
     }
     
     private JFrame x;
-    private Panel p0,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12,p13,p14,p15,p16,p17,p18,p19;
-    private Label usernameText,nameText,icNoText,basicSalaryText,hraText,daText,allowanceText,otpText;
-    private TextField usernameInput,nameInput,icNoInput,basicSalaryInput,hraInput,daInput,allowanceInput,otpInput;
+    private Panel p0,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12,p13;
+    private Label usernameText,nameText,icNoText,basicSalaryText,allowanceText;
+    private TextField usernameInput,nameInput,icNoInput,basicSalaryInput,allowanceInput;
     private Button confirm,back;
     public HRRegisterStaffPage(){
         x = new JFrame("Register Staff Page");
@@ -97,16 +85,10 @@ public class HRRegisterStaffPage implements ActionListener{
         p7 = new Panel();
         p8 = new Panel(new GridLayout(2,1));
         p9 = new Panel();
-        p10 = new Panel(new GridLayout(2,1));
+        p10 = new Panel();
         p11 = new Panel();
-        p12 = new Panel(new GridLayout(2,1));
-        p13 = new Panel();
-        p14 = new Panel(new GridLayout(2,1));
-        p15 = new Panel();
-        p16 = new Panel();
-        p17 = new Panel();
-        p18 = new Panel();
-        p19 = new Panel(new GridLayout(4,2));
+        p12 = new Panel();
+        p13 = new Panel(new GridLayout(4,2));
 
         usernameText = new Label("USERNAME",Label.CENTER);
         usernameInput = new TextField(30);
@@ -131,49 +113,28 @@ public class HRRegisterStaffPage implements ActionListener{
         p6.add(basicSalaryText);
         p7.add(basicSalaryInput);
         p6.add(p7);
-        
-        hraText = new Label("HOUSE RENT ALLOWANCE",Label.CENTER);
-        hraInput = new TextField(30);
-        p8.add(hraText);
-        p9.add(hraInput);
-        p8.add(p9);
-        
-        daText = new Label("DEARNESS ALLOWANCE",Label.CENTER);
-        daInput = new TextField(30);
-        p10.add(daText);
-        p11.add(daInput);
-        p10.add(p11);
-        
-        allowanceText = new Label("OTHER ALLOWANCE",Label.CENTER);
+           
+        allowanceText = new Label("ALLOWANCES",Label.CENTER);
         allowanceInput = new TextField(30);
-        p12.add(allowanceText);
-        p13.add(allowanceInput);
-        p12.add(p13);
-        
-        otpText = new Label("ONE-TIME PAYMENT",Label.CENTER);
-        otpInput = new TextField(30);
-        p14.add(otpText);
-        p15.add(otpInput);
-        p14.add(p15);
-        
+        p8.add(allowanceText);
+        p9.add(allowanceInput);
+        p8.add(p9);
+            
         back = new Button("BACK");
         confirm= new Button("CONFIRM");
         confirm.addActionListener(this);
         back.addActionListener(this);
-        p16.add(back);
-        p17.add(confirm);
-        p18.add(p16);
-        p18.add(p17);
+        p10.add(back);
+        p11.add(confirm);
+        p12.add(p10);
+        p12.add(p11);
         
-        p19.add(p0);
-        p19.add(p2);
-        p19.add(p4);
-        p19.add(p6);
-        p19.add(p8);
-        p19.add(p10);
-        p19.add(p12);
-        p19.add(p14);
-        x.add(p19,BorderLayout.CENTER);
-        x.add(p18,BorderLayout.SOUTH);
+        p13.add(p0);
+        p13.add(p2);
+        p13.add(p4);
+        p13.add(p6);
+        p13.add(p8);
+        x.add(p13,BorderLayout.CENTER);
+        x.add(p12,BorderLayout.SOUTH);
     }
 }

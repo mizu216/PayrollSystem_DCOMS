@@ -18,6 +18,9 @@ public class Client {
     public static HRLoginPage hrLoginPage;
     public static HRUpdatePasswordPage hrUpdatePasswordPage;
     public static HRRegisterStaffPage hrRegisterStaffPage;
+    public static HRViewStaffPage hrViewStaffPage;
+    public static HRGeneratePayrollPage hrGeneratePayrollPage;
+    public static HRViewPayrollPage hrViewPayrollPage;
     public static MainPage mainPage;
     public static String loginUser = null;
 
@@ -32,6 +35,9 @@ public class Client {
         hrLoginPage = new HRLoginPage();
         hrUpdatePasswordPage = new HRUpdatePasswordPage();
         hrRegisterStaffPage = new HRRegisterStaffPage();
+        hrViewStaffPage = new HRViewStaffPage();
+        hrGeneratePayrollPage = new HRGeneratePayrollPage();
+        hrViewPayrollPage = new HRViewPayrollPage();
         mainPage = new MainPage();
     }
 }

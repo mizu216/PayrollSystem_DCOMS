@@ -172,7 +172,7 @@ public class Server extends UnicastRemoteObject implements Interface {
         return false;
     }
     
-     public boolean hrRegisterStaff(String username,String password,String name,String icNo,String bs,String hra, String da, String allowance, String otp)throws RemoteException{
+    public boolean hrRegisterStaff(String username,String password,String name,String icNo,String bs, String allowance)throws RemoteException{
         try{
             Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/payroll_system_staff","root","root");
             System.out.println("Database Connected");
@@ -187,16 +187,13 @@ public class Server extends UnicastRemoteObject implements Interface {
                 return false;
             }
             else{
-                PreparedStatement pstmt2 = conn.prepareStatement("INSERT INTO EMPLOYEE_Table (username, password, name,ic_no,bs,hra,da,allowance,otp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                PreparedStatement pstmt2 = conn.prepareStatement("INSERT INTO EMPLOYEE_Table (username, password, name,ic_no,bs,allowance) VALUES (?, ?, ?, ?, ?, ?)");
                 pstmt2.setString(1, username);
                 pstmt2.setString(2, password);
                 pstmt2.setString(3, name);
                 pstmt2.setString(4,icNo);
                 pstmt2.setString(5, bs);
-                pstmt2.setString(6, hra);
-                pstmt2.setString(7, da);
-                pstmt2.setString(8,allowance);
-                pstmt2.setString(9,otp);
+                pstmt2.setString(6,allowance);
                 pstmt2.executeUpdate();
                 conn.commit();
                 pstmt2.close();
@@ -208,5 +205,155 @@ public class Server extends UnicastRemoteObject implements Interface {
             System.out.println(e);
             return false;
         }
+    }
+    public String[][] HRViewStaff()throws RemoteException{
+        String[][] staffDataList = null;
+        try{
+            Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/payroll_system_staff", "root", "root");
+            PreparedStatement pstmt = conn.prepareStatement("SELECT COUNT(*) AS rowCount FROM Employee_Table");
+            ResultSet rs = pstmt.executeQuery();
+            int rowCount = 0;
+            if (rs.next()) {
+                rowCount = rs.getInt("rowCount");
+            }
+            rs.close();
+            pstmt.close();
+            
+            staffDataList = new String[rowCount][5];
+            PreparedStatement pstmt2 = conn.prepareStatement("SELECT * FROM Employee_Table");
+            ResultSet rs2 = pstmt2.executeQuery();
+            int i=0;
+            while (rs2.next()) {
+                staffDataList[i][0] = rs2.getString("Username");                
+                staffDataList[i][1] = rs2.getString("Name");
+                staffDataList[i][2] = rs2.getString("IC_No"); 
+                staffDataList[i][3] = rs2.getString("bs");                
+                staffDataList[i][4] = rs2.getString("Allowance");
+                i++;
+            }
+            rs2.close();
+            pstmt2.close();
+            conn.close();
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
+        return staffDataList;
+    }
+    
+    public boolean checkStaffUsername(String username)throws RemoteException{
+        try{
+            Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/payroll_system_staff","root","root");
+            System.out.println("Database Connected");
+            PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM EMPLOYEE_Table WHERE Username = ?");
+            pstmt.setString(1, username);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                conn.commit();
+                rs.close();
+                pstmt.close();
+                conn.close();
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        catch (SQLException e){
+            System.out.println(e);
+            return false;
+        }
+    }
+    
+    @Override
+    public boolean HRGeneratePayroll(String username,double lp,double ap)throws RemoteException{
+        try{
+            Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/payroll_system_staff","root","root");
+            System.out.println("Database Connected");
+            PreparedStatement pstmt = conn.prepareStatement("SELECT bs, allowance FROM EMPLOYEE_Table WHERE Username = ?");
+            pstmt.setString(1, username);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                double basicSalary = Double.parseDouble(rs.getString("bs"));
+                double allowance = Double.parseDouble(rs.getString("allowance"));
+                PreparedStatement pstmt2 = conn.prepareStatement("INSERT INTO Payroll_Table (username, BasicSalary, Allowance,AbsencePenalty,LatePenalty) VALUES (?, ?, ?, ?, ?)");
+                pstmt2.setString(1, username);
+                pstmt2.setDouble(2, basicSalary);
+                pstmt2.setDouble(3, allowance);
+                pstmt2.setDouble(4,ap);
+                pstmt2.setDouble(5, lp);
+                pstmt2.executeUpdate();
+                conn.commit();
+                rs.close();
+                pstmt.close();
+                pstmt2.close();
+                conn.close();                
+                System.out.println("hi");
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        catch (SQLException e){
+            System.out.println(e);
+            return false;
+        }
+    }
+    
+    public String[][] HRViewPayroll()throws RemoteException, InterruptedException{
+        String[][] staffDataList = null;
+        try{
+            Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/payroll_system_staff", "root", "root");
+            PreparedStatement pstmt = conn.prepareStatement("SELECT COUNT(*) AS rowCount FROM Payroll_Table");
+            ResultSet rs = pstmt.executeQuery();
+            int rowCount = 0;
+            if (rs.next()) {
+                rowCount = rs.getInt("rowCount");
+            }
+            rs.close();
+            pstmt.close();
+            
+            staffDataList = new String[rowCount][8];
+            PreparedStatement pstmt2 = conn.prepareStatement("SELECT * FROM Payroll_Table");
+            ResultSet rs2 = pstmt2.executeQuery();
+            int i=0;
+            while (rs2.next()) {
+                double grossSalary = calgrossSalary(rs2.getDouble("BasicSalary"),rs2.getDouble("Allowance"));
+                double netDeduction = calnetDeduct(rs2.getDouble("LatePenalty"),rs2.getDouble("AbsencePenalty"));
+                staffDataList[i][0] = rs2.getString("Username");
+                staffDataList[i][1] = Double.toString(rs2.getDouble("BasicSalary"));
+                staffDataList[i][2] = Double.toString(rs2.getDouble("Allowance"));
+                staffDataList[i][3] = Double.toString(grossSalary);
+                staffDataList[i][4] = Double.toString(rs2.getDouble("LatePenalty"));
+                staffDataList[i][5] = Double.toString(rs2.getDouble("AbsencePenalty"));
+                staffDataList[i][6] = Double.toString(netDeduction);
+                staffDataList[i][7] = Double.toString(grossSalary - netDeduction);
+                i++;
+            }
+            rs2.close();
+            pstmt2.close();
+            conn.close();
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
+        return staffDataList;
+    }
+    
+    @Override
+    public double calgrossSalary(double basicSalary,double allowance) throws RemoteException, InterruptedException{
+        SalaryCalculator.grossPayCalculator gpThread = new SalaryCalculator.grossPayCalculator(basicSalary, allowance);
+        gpThread.start();
+        gpThread.join();
+        return gpThread.getGrossPay();
+    }
+    
+    @Override
+    public double calnetDeduct(double absencePenalty,double latePenalty) throws RemoteException, InterruptedException{
+        SalaryCalculator.netDeductCalculator ndThread = new SalaryCalculator.netDeductCalculator(absencePenalty, latePenalty);
+        ndThread.start();
+        ndThread.join();
+        return ndThread.getNetDeduct();
     }
 }
