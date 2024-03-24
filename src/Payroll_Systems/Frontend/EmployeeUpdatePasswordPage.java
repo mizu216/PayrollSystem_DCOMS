@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 import java.rmi.Naming;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-public class HRUpdatePasswordPage implements ActionListener{
+public class EmployeeUpdatePasswordPage implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e){
         try{
@@ -20,10 +20,10 @@ public class HRUpdatePasswordPage implements ActionListener{
                 newPassInput.setText("");
                 confirmPassInput.setText("");
                 if (newPassword.equals(confirmPassword)){
-                    if (object.hrUpdatePassword(Client.loginUser, oldPassword, newPassword)==true){
+                    if (object.employeeUpdatePassword(Client.loginUser, oldPassword, newPassword)==true){
                         JOptionPane.showMessageDialog(x,"Password Update Successfully");
                         x.setVisible(false);
-                        Client.hrMainPage.getJFrame().setVisible(true);
+                        Client.employeeMainPage.getJFrame().setVisible(true);
                     }
                     else{
                         JOptionPane.showMessageDialog(x,"Invalid Old Password");
@@ -42,7 +42,7 @@ public class HRUpdatePasswordPage implements ActionListener{
                 newPassInput.setText("");
                 confirmPassInput.setText("");
                 x.setVisible(false);
-                Client.hrMainPage.getJFrame().setVisible(true);
+                Client.employeeMainPage.getJFrame().setVisible(true);
             }
         }
         
@@ -60,8 +60,8 @@ public class HRUpdatePasswordPage implements ActionListener{
     private Label oldPass,newPass,confirmPass,title;
     private TextField oldPassInput,newPassInput,confirmPassInput;
     private Button confirm,back;
-    public HRUpdatePasswordPage(){
-        x = new JFrame("HR Update Password Page");
+    public EmployeeUpdatePasswordPage(){
+        x = new JFrame("Employee Update Password Page");
         x.setSize(500,500);
         x.setLocation(700,300);
         p0 = new Panel(new GridLayout(2,1));

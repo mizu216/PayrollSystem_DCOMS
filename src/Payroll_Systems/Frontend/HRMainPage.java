@@ -39,6 +39,7 @@ public class HRMainPage implements ActionListener{
                 Client.hrViewPayrollPage.getJFrame().setVisible(true);
             }
             else if(e.getSource()==logout){
+                Client.loginUser = null;
                 x.setVisible(false);
                 Client.mainPage.getJFrame().setVisible(true);
             }
@@ -74,12 +75,12 @@ public class HRMainPage implements ActionListener{
         
         update = new Button("Update Password");
         p1.add(update);
-
-        staff = new Button("View Staff");
-        p2.add(staff);
-
+        
         register = new Button("Register New Staff");
-        p3.add(register);
+        p2.add(register);
+
+        staff = new Button("View All Staff");
+        p3.add(staff);
         
         payroll = new Button("View All Payroll");
         p4.add(payroll);

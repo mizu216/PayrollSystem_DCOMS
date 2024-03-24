@@ -22,11 +22,10 @@ public class HRViewPayrollPage implements ActionListener{
     private Panel p0,p1,p2,p3,p4,p5,p6,p2a;
     private JTable table;
     private DefaultTableModel tableModel;
-    private TextField payrollInput;
-    private Label CD,payroll;
-    private Button back,update,generate;
+    private Label CD;
+    private Button back;
     public HRViewPayrollPage(){
-        x = new JFrame("View Employee Page");
+        x = new JFrame("View All Payroll Page");
         x.setSize(1200,500);
         x.setLocation(700,300);
         x.setLayout(new BorderLayout());
@@ -41,7 +40,7 @@ public class HRViewPayrollPage implements ActionListener{
         p6 = new Panel();
         p6.setLayout(new BorderLayout());
         
-        CD = new Label("__Employee Detail__",Label.CENTER);
+        CD = new Label("__Payroll Detail__",Label.CENTER);
         CD.setFont(new Font(Font.MONOSPACED,Font.BOLD,16));
         p0.add(CD,BorderLayout.NORTH);
         
@@ -54,6 +53,9 @@ public class HRViewPayrollPage implements ActionListener{
         tableModel.addColumn("ABSENCE PENALTY");
         tableModel.addColumn("NET DEDUCTION");
         tableModel.addColumn("NET PAY");
+        tableModel.addColumn("MONTH");
+        tableModel.addColumn("YEAR");
+
         
         table = new JTable(tableModel);
         p0.add(new JScrollPane(table),BorderLayout.CENTER);
@@ -64,7 +66,7 @@ public class HRViewPayrollPage implements ActionListener{
         back.addActionListener(this);
         p1.add(back);;
         p3.add(p1);
-        x.add(p3,BorderLayout.NORTH);
+        x.add(p3,BorderLayout.SOUTH);
     }
     
     public JFrame getJFrame(){
@@ -90,24 +92,11 @@ public class HRViewPayrollPage implements ActionListener{
                 x.setVisible(false);
                 Client.hrMainPage.getJFrame().setVisible(true);
             }
-            else if(e.getSource()==generate){
-                Interface object = (Interface)Naming.lookup("rmi://localhost:1044/payroll");
-                String username = payrollInput.getText();
-                if(object.checkStaffUsername(username)==true){
-                    x.setVisible(false);
-                    Client.hrGeneratePayrollPage.getJFrame().setVisible(true);
-                    Client.hrGeneratePayrollPage.setEmployee(username);
-                    clearAllRow();
-                }
-                else{
-                    JOptionPane.showMessageDialog(x,"Invalid Username");
-                }
-            }
         }
         
         catch(Exception ex){
             ex.printStackTrace();
-            JOptionPane.showMessageDialog(x,"Error!!! Please Try Again");
+            JOptionPane.showMessageDialog(x,"Error Loading!!!");
         }
         
     }

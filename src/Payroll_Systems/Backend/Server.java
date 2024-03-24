@@ -32,7 +32,7 @@ public class Server extends UnicastRemoteObject implements Interface {
     
    
     @Override
-    public int adminRegisterHR(String username,String password,String name,String icNo)throws RemoteException{
+    public boolean adminRegisterHR(String username,String password,String name)throws RemoteException{
         try{
             Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/payroll_system_staff","root","root");
             System.out.println("Database Connected");
@@ -44,37 +44,22 @@ public class Server extends UnicastRemoteObject implements Interface {
                 rs.close();
                 pstmt.close();
                 conn.close();
-                return 1;
-            }
-            if(icNo.length()!=12||isParseSuccessful(icNo) == false){
-                conn.commit();
-                conn.close();
-                return 2;
+                return false;
             }
             else{
-                PreparedStatement pstmt2 = conn.prepareStatement("INSERT INTO HR_Table (Username, Password, name,IC_No) VALUES (?, ?, ?, ?)");
+                PreparedStatement pstmt2 = conn.prepareStatement("INSERT INTO HR_Table (Username, Password, name) VALUES (?, ?, ?)");
                 pstmt2.setString(1, username);
                 pstmt2.setString(2, password);
                 pstmt2.setString(3, name);
-                pstmt2.setString(4,icNo);
                 pstmt2.executeUpdate();
                 conn.commit();
                 pstmt2.close();
                 conn.close();
-                return 3;
+                return true;
             }
         }
-        catch (SQLException e){
-            System.out.println(e);
-            return 4;
-        }
-    }
-    
-    private static boolean isParseSuccessful(String numberString) {
-        try {
-            Long.parseLong(numberString);
-            return true;
-        } catch (NumberFormatException e) {
+        catch (SQLException ex){
+            ex.printStackTrace();
             return false;
         }
     }
@@ -266,7 +251,7 @@ public class Server extends UnicastRemoteObject implements Interface {
     }
     
     @Override
-    public boolean HRGeneratePayroll(String username,double lp,double ap)throws RemoteException{
+    public boolean HRGeneratePayroll(String username,double lp,double ap,int month,int year)throws RemoteException{
         try{
             Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/payroll_system_staff","root","root");
             System.out.println("Database Connected");
@@ -276,12 +261,14 @@ public class Server extends UnicastRemoteObject implements Interface {
             if (rs.next()) {
                 double basicSalary = Double.parseDouble(rs.getString("bs"));
                 double allowance = Double.parseDouble(rs.getString("allowance"));
-                PreparedStatement pstmt2 = conn.prepareStatement("INSERT INTO Payroll_Table (username, BasicSalary, Allowance,AbsencePenalty,LatePenalty) VALUES (?, ?, ?, ?, ?)");
+                PreparedStatement pstmt2 = conn.prepareStatement("INSERT INTO Payroll_Table (username, BasicSalary, Allowance,AbsencePenalty,LatePenalty,Month,Years) VALUES (?, ?, ?, ?, ?, ?, ?)");
                 pstmt2.setString(1, username);
                 pstmt2.setDouble(2, basicSalary);
                 pstmt2.setDouble(3, allowance);
                 pstmt2.setDouble(4,ap);
                 pstmt2.setDouble(5, lp);
+                pstmt2.setInt(6, month);
+                pstmt2.setInt(7, year);
                 pstmt2.executeUpdate();
                 conn.commit();
                 rs.close();
@@ -301,6 +288,31 @@ public class Server extends UnicastRemoteObject implements Interface {
         }
     }
     
+    public boolean hrUpdateSalary(String username, String bs, String allowance)throws RemoteException{
+        try{
+            Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/payroll_system_staff", "root", "root");
+            PreparedStatement pstmt = conn.prepareStatement("UPDATE Employee_Table SET BS = ?, Allowance = ? WHERE Username = ?");
+            pstmt.setString(1, bs);
+            pstmt.setString(2, allowance);
+            pstmt.setString(3, username);
+            int executeUpdate = pstmt.executeUpdate();
+            if (executeUpdate > 0) {
+                pstmt.close();
+                conn.close(); 
+                return true;//sucess
+            } 
+            else {
+                pstmt.close();
+                conn.close();
+                return false;//errorr modify,try again
+            }  
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+     
     public String[][] HRViewPayroll()throws RemoteException, InterruptedException{
         String[][] staffDataList = null;
         try{
@@ -314,7 +326,7 @@ public class Server extends UnicastRemoteObject implements Interface {
             rs.close();
             pstmt.close();
             
-            staffDataList = new String[rowCount][8];
+            staffDataList = new String[rowCount][10];
             PreparedStatement pstmt2 = conn.prepareStatement("SELECT * FROM Payroll_Table");
             ResultSet rs2 = pstmt2.executeQuery();
             int i=0;
@@ -329,6 +341,8 @@ public class Server extends UnicastRemoteObject implements Interface {
                 staffDataList[i][5] = Double.toString(rs2.getDouble("AbsencePenalty"));
                 staffDataList[i][6] = Double.toString(netDeduction);
                 staffDataList[i][7] = Double.toString(grossSalary - netDeduction);
+                staffDataList[i][8] = Integer.toString(rs2.getInt("Month"));
+                staffDataList[i][9] = Integer.toString(rs2.getInt("Years"));
                 i++;
             }
             rs2.close();
@@ -355,5 +369,133 @@ public class Server extends UnicastRemoteObject implements Interface {
         ndThread.start();
         ndThread.join();
         return ndThread.getNetDeduct();
+    }
+    
+    public boolean employeeLogin(String username, String password)throws RemoteException{
+        try{
+            Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/payroll_system_staff", "root", "root");
+            PreparedStatement pstmt = conn.prepareStatement("SELECT Password FROM Employee_Table WHERE Username = ?");
+            pstmt.setString(1, username);
+
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                String storedPassword = rs.getString("Password");
+                if (storedPassword.equals(password)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+            rs.close();
+            pstmt.close();
+            conn.close();
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    public boolean employeeUpdatePassword(String username, String oldPassword, String newPassword)throws RemoteException{
+        try{
+            Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/payroll_system_staff", "root", "root");
+            PreparedStatement pstmt = conn.prepareStatement("SELECT Password FROM Employee_Table WHERE Username = ?");
+            pstmt.setString(1, username);
+
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                String storedPassword = rs.getString("Password");
+                if (storedPassword.equals(oldPassword)) {
+                    System.out.println("good");
+                    pstmt = conn.prepareStatement("UPDATE Employee_Table SET Password = ? WHERE Username = ?");
+                    pstmt.setString(1, newPassword);
+                    pstmt.setString(2, username);
+                    int executeUpdate = pstmt.executeUpdate();
+                    if (executeUpdate > 0) {
+                        return true;//sucess
+                    } else {
+                        return false;//errorr modify,try again
+                    }
+                }
+            }
+            rs.close();
+            pstmt.close();
+            conn.close(); 
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    public String[][] employeeViewPayroll(String username)throws RemoteException, InterruptedException{
+        String[][] staffDataList = null;
+        try{
+            Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/payroll_system_staff", "root", "root");
+            PreparedStatement pstmt = conn.prepareStatement("SELECT COUNT(*) AS rowCount FROM Payroll_Table WHERE Username =?");
+            pstmt.setString(1, username);
+            ResultSet rs = pstmt.executeQuery();
+            int rowCount = 0;
+            if (rs.next()) {
+                rowCount = rs.getInt("rowCount");
+            }
+            rs.close();
+            pstmt.close();
+            
+            staffDataList = new String[rowCount][10];
+            PreparedStatement pstmt2 = conn.prepareStatement("SELECT * FROM Payroll_Table Where Username = ?");
+            pstmt2.setString(1, username);
+            ResultSet rs2 = pstmt2.executeQuery();
+            int i=0;
+            while (rs2.next()) {
+                double grossSalary = calgrossSalary(rs2.getDouble("BasicSalary"),rs2.getDouble("Allowance"));
+                double netDeduction = calnetDeduct(rs2.getDouble("LatePenalty"),rs2.getDouble("AbsencePenalty"));
+                staffDataList[i][0] = rs2.getString("Username");
+                staffDataList[i][1] = Double.toString(rs2.getDouble("BasicSalary"));
+                staffDataList[i][2] = Double.toString(rs2.getDouble("Allowance"));
+                staffDataList[i][3] = Double.toString(grossSalary);
+                staffDataList[i][4] = Double.toString(rs2.getDouble("LatePenalty"));
+                staffDataList[i][5] = Double.toString(rs2.getDouble("AbsencePenalty"));
+                staffDataList[i][6] = Double.toString(netDeduction);
+                staffDataList[i][7] = Double.toString(grossSalary - netDeduction);
+                staffDataList[i][8] = Integer.toString(rs2.getInt("Month"));
+                staffDataList[i][9] = Integer.toString(rs2.getInt("Years"));
+                i++;
+            }
+            rs2.close();
+            pstmt2.close();
+            conn.close();
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
+        return staffDataList;
+    }
+    
+    public String[][] employeeViewStaff(String username)throws RemoteException{
+        String[][] staffDataList = null;
+        try{
+            Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/payroll_system_staff", "root", "root");
+            staffDataList = new String[1][5];
+            PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM Employee_Table where Username=?");
+            pstmt.setString(1, username);
+            ResultSet rs = pstmt.executeQuery();
+            int i=0;
+            while (rs.next()) {
+                staffDataList[i][0] = rs.getString("Username");                
+                staffDataList[i][1] = rs.getString("Name");
+                staffDataList[i][2] = rs.getString("IC_No"); 
+                staffDataList[i][3] = rs.getString("bs");                
+                staffDataList[i][4] = rs.getString("Allowance");
+                i++;
+            }
+            rs.close();
+            pstmt.close();
+            conn.close();
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
+        return staffDataList;
     }
 }

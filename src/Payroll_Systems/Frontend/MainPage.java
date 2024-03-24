@@ -13,9 +13,13 @@ public class MainPage implements ActionListener{
                 x.setVisible(false);
                 Client.adminLoginPage.getJFrame().setVisible(true);
             }
-            if(e.getSource()==HR){
+            else if(e.getSource()==HR){
                 x.setVisible(false);
                 Client.hrLoginPage.getJFrame().setVisible(true);
+            }
+            else if(e.getSource()==employee){
+                x.setVisible(false);
+                Client.employeeLoginPage.getJFrame().setVisible(true);
             }
             
             else if(e.getSource()==quit){
@@ -24,7 +28,7 @@ public class MainPage implements ActionListener{
         }
         
         catch(Exception ex){
-            JOptionPane.showMessageDialog(x,"Error!!! Please Try Again");
+            JOptionPane.showMessageDialog(x,"Error Loading!!!");
             ex.printStackTrace();
         }
     }
@@ -37,7 +41,7 @@ public class MainPage implements ActionListener{
     private Label title;
     private Button admin,HR,employee,quit;
     public MainPage(){
-        x = new JFrame("Main Page");
+        x = new JFrame("Main Menu Page");
         x.setSize(500,500);
         x.setLocation(700,300);
         p0 = new Panel();
@@ -46,7 +50,7 @@ public class MainPage implements ActionListener{
         p3 = new Panel();
         p4 = new Panel();
         
-        title = new Label("Admin Main Page");
+        title = new Label("PPlease Select Interface");
         title.setFont(new Font("SansSerif", Font.BOLD, 14));
         p0.add(title);
         

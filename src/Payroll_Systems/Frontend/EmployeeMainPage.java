@@ -8,36 +8,36 @@ import java.rmi.Naming;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-public class AdminMainPage implements ActionListener{
+public class EmployeeMainPage implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e){
         try{
-            if(e.getSource()==register){
+            if(e.getSource()==update){
                 x.setVisible(false);
-                Client.adminRegisterHRPage.getJFrame().setVisible(true);
+                Client.employeeUpdatePasswordPage.getJFrame().setVisible(true);
             }
-            
-            else if (e.getSource()==hr){
+            else if (e.getSource()==pd){
                 Interface object = (Interface)Naming.lookup("rmi://localhost:1044/payroll");
-                String[][] hrData = object.adminViewHR();
-                for (int i = 0; i < hrData.length; i++) {
-                    Client.adminViewHRPage.getTableModel().insertRow(i, hrData[i]);
-                }
+                String[][] staffData = object.employeeViewStaff(Client.loginUser);
+                Client.employeeViewPersonalDetailPage.getUsernameInput().setText(staffData[0][0]);
+                Client.employeeViewPersonalDetailPage.getNameInput().setText(staffData[0][1]);
+                Client.employeeViewPersonalDetailPage.getIcNoInput().setText(staffData[0][2]);
+                Client.employeeViewPersonalDetailPage.getBasicSalaryInput().setText(staffData[0][3]);
+                Client.employeeViewPersonalDetailPage.getAllowanceInput().setText(staffData[0][4]);
                 x.setVisible(false);
-                Client.adminViewHRPage.getJFrame().setVisible(true);
+                Client.employeeViewPersonalDetailPage.getJFrame().setVisible(true);
             }
-            
-            else if (e.getSource()==employee){
+            else if(e.getSource()==pp){
                 Interface object = (Interface)Naming.lookup("rmi://localhost:1044/payroll");
-                String[][] staffData = object.HRViewStaff();
+                String[][] staffData = object.employeeViewPayroll(Client.loginUser);
                 for (int i = 0; i < staffData.length; i++) {
-                    Client.adminViewStaffPage.getTableModel().insertRow(i, staffData[i]);
+                    Client.employeeViewPayrollPage.getTableModel().insertRow(i, staffData[i]);
                 }
                 x.setVisible(false);
-                Client.adminViewStaffPage.getJFrame().setVisible(true);
+                Client.employeeViewPayrollPage.getJFrame().setVisible(true);
             }
-            
             else if(e.getSource()==logout){
+                Client.loginUser = null;
                 x.setVisible(false);
                 Client.mainPage.getJFrame().setVisible(true);
             }
@@ -55,9 +55,9 @@ public class AdminMainPage implements ActionListener{
     private JFrame x;
     private Panel p0,p1,p2,p3,p4, p5;
     private Label title;
-    private Button hr,employee,register,logout;
-    public AdminMainPage(){
-        x = new JFrame("Admin Main Page");
+    private Button pd,pp,update,logout;
+    public EmployeeMainPage(){
+        x = new JFrame("Employee Main Page");
         x.setSize(500,500);
         x.setLocation(700,300);
         p0 = new Panel();
@@ -66,25 +66,25 @@ public class AdminMainPage implements ActionListener{
         p3 = new Panel();
         p4 = new Panel();
         
-        title = new Label("Admin Main Menu");
+        title = new Label("Employee Main Menu");
         title.setFont(new Font("SansSerif", Font.BOLD, 14));
         p0.add(title);
         
-        hr = new Button("View All HR");
-        p1.add(hr);
+        pd = new Button("View Personal Detail");
+        p1.add(pd);
 
-        employee = new Button("View All Employee");
-        p2.add(employee);
+        pp = new Button("View Personal Payroll");
+        p2.add(pp);
 
-        register = new Button("Register New HR");
-        p3.add(register);
+        update = new Button("Update Password");
+        p3.add(update);
         
         logout = new Button("Logout");
         p4.add(logout);
 
-        hr.addActionListener(this);
-        employee.addActionListener(this);
-        register.addActionListener(this);
+        pd.addActionListener(this);
+        pp.addActionListener(this);
+        update.addActionListener(this);
         logout.addActionListener(this);
         
         x.setLayout(new GridLayout(5,1));

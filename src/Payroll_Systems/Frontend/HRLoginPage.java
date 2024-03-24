@@ -23,17 +23,22 @@ public class HRLoginPage implements ActionListener{
                    Client.hrMainPage.getJFrame().setVisible(true);
                 }
                 else{
-                    System.out.println("not ok");
+                    JOptionPane.showMessageDialog(x,"Invalid Credential!!!");
                 }
             }
                         
-            else if(e.getSource() == exit){
-                System.exit(0);
+            else if(e.getSource() == back){
+                String username = usernameInput.getText();
+                String password = passwordInput.getText();
+                usernameInput.setText("");
+                passwordInput.setText("");
+                x.setVisible(false);
+                Client.mainPage.getJFrame().setVisible(true);
             }
         }
         
         catch(Exception ex){
-            JOptionPane.showMessageDialog(x,"Invalid input!!!");
+            JOptionPane.showMessageDialog(x,"Error Loading!!!");
             ex.printStackTrace();
         }
         
@@ -42,10 +47,10 @@ public class HRLoginPage implements ActionListener{
         return x;
     }
     private JFrame x;
-    private Panel p0,p1,p2,p3,p4, p5;
+    private Panel p0,p1,p2,p3,p4, p5,p6,p7;
     private Label usernameText,passwordText, title;
     private TextField usernameInput,passwordInput;
-    private Button login,exit;
+    private Button login,back;
     public HRLoginPage(){
         x = new JFrame("HR Login Page");
         x.setSize(500,500);
@@ -56,6 +61,8 @@ public class HRLoginPage implements ActionListener{
         p3 = new Panel();
         p4 = new Panel();
         p5 = new Panel();
+        p6 = new Panel();
+        p7 = new Panel();
         
         usernameText = new Label("USERNAME",Label.CENTER);
         usernameInput = new TextField(30);
@@ -70,20 +77,23 @@ public class HRLoginPage implements ActionListener{
         p1.add(p3);
         
         login = new Button("Login");
-        exit = new Button("Exit");
+        back = new Button("Back");
         login.addActionListener(this);
-        exit.addActionListener(this);
-        p4.add(login);
+        back.addActionListener(this);
+        p4.add(back);
+        p5.add(login);
+        p6.add(p4);
+        p6.add(p5);
 
-        title = new Label("Admin Login Page");
+        title = new Label("HR Login");
         title.setFont(new Font("SansSerif", Font.BOLD, 14));
-        p5.add(title);
+        p7.add(title);
         
         x.setLayout(new GridLayout(4,1));
-        x.add(p5);
+        x.add(p7);
         x.add(p0);
         x.add(p1);
-        x.add(p4);
+        x.add(p6);
         x.getContentPane().setBackground(Color.lightGray);
         x.setVisible(false);
     }

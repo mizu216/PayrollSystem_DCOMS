@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 import java.rmi.Naming;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-public class AdminLoginPage implements ActionListener{
+public class EmployeeLoginPage implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e){
         try{
@@ -17,17 +17,18 @@ public class AdminLoginPage implements ActionListener{
                 String password = passwordInput.getText();
                 usernameInput.setText("");
                 passwordInput.setText("");
-                if (object.adminLogin(username, password)== true){
+                if (object.employeeLogin(username, password)== true){
+                    Client.loginUser = username;
                     x.setVisible(false);
-                    Client.adminMainPage.getJFrame().setVisible(true);
+                    Client.employeeMainPage.getJFrame().setVisible(true);
                 }
                 else{
-                   JOptionPane.showMessageDialog(x,"Invalid Credential!!!");
+                    JOptionPane.showMessageDialog(x,"Invalid Credential!!!");
                 }
             }
                         
-            else if(e.getSource() == back){
-               String username = usernameInput.getText();
+            else if(e.getSource()==back){
+                String username = usernameInput.getText();
                 String password = passwordInput.getText();
                 usernameInput.setText("");
                 passwordInput.setText("");
@@ -46,12 +47,12 @@ public class AdminLoginPage implements ActionListener{
         return x;
     }
     private JFrame x;
-    private Panel p0,p1,p2,p3,p4, p5,p6,p7;
+    private Panel p0,p1,p2,p3,p4, p5;
     private Label usernameText,passwordText, title;
     private TextField usernameInput,passwordInput;
     private Button login,back;
-    public AdminLoginPage(){
-        x = new JFrame("Admin Login Page");
+    public EmployeeLoginPage(){
+        x = new JFrame("Employee Login Page");
         x.setSize(500,500);
         x.setLocation(700,300);
         p0 = new Panel(new GridLayout(2,1));
@@ -60,9 +61,7 @@ public class AdminLoginPage implements ActionListener{
         p3 = new Panel();
         p4 = new Panel();
         p5 = new Panel();
-        p6 = new Panel();
-        p7 = new Panel();
-       
+        
         usernameText = new Label("USERNAME",Label.CENTER);
         usernameInput = new TextField(30);
         p2.add(usernameInput);
@@ -79,21 +78,17 @@ public class AdminLoginPage implements ActionListener{
         back = new Button("Back");
         login.addActionListener(this);
         back.addActionListener(this);
-        p4.add(back);
-        p5.add(login);
-        p6.add(p4);
-        p6.add(p5);
-        
+        p4.add(login);
 
-        title = new Label("Admin Login");
+        title = new Label("Employee Login Page");
         title.setFont(new Font("SansSerif", Font.BOLD, 14));
-        p7.add(title);
+        p5.add(title);
         
         x.setLayout(new GridLayout(4,1));
-        x.add(p7);
+        x.add(p5);
         x.add(p0);
         x.add(p1);
-        x.add(p6);
+        x.add(p4);
         x.getContentPane().setBackground(Color.lightGray);
         x.setVisible(false);
     }

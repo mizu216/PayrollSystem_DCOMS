@@ -109,10 +109,23 @@ public class HRViewStaffPage implements ActionListener{
                 Interface object = (Interface)Naming.lookup("rmi://localhost:1044/payroll");
                 String username = payrollInput.getText();
                 if(object.checkStaffUsername(username)==true){
-                    x.setVisible(false);
-                    Client.hrGeneratePayrollPage.getJFrame().setVisible(true);
                     Client.hrGeneratePayrollPage.setEmployee(username);
                     clearAllRow();
+                    x.setVisible(false);
+                    Client.hrGeneratePayrollPage.getJFrame().setVisible(true);
+                }
+                else{
+                    JOptionPane.showMessageDialog(x,"Invalid Username");
+                }
+            }
+            else if(e.getSource()==update){
+                Interface object = (Interface)Naming.lookup("rmi://localhost:1044/payroll");
+                String username = payrollInput.getText();
+                if(object.checkStaffUsername(username)==true){
+                    Client.hrUpdateSalaryPage.setEmployee(username);
+                    clearAllRow();
+                    x.setVisible(false);
+                    Client.hrUpdateSalaryPage.getJFrame().setVisible(true);
                 }
                 else{
                     JOptionPane.showMessageDialog(x,"Invalid Username");
