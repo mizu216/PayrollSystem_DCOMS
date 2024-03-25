@@ -135,7 +135,6 @@ public class Server extends UnicastRemoteObject implements Interface {
             if (rs.next()) {
                 String storedPassword = rs.getString("Password");
                 if (storedPassword.equals(oldPassword)) {
-                    System.out.println("good");
                     pstmt = conn.prepareStatement("UPDATE HR_Table SET Password = ? WHERE Username = ?");
                     pstmt.setString(1, newPassword);
                     pstmt.setString(2, username);
