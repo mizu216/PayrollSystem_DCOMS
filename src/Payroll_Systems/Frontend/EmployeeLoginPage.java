@@ -61,6 +61,8 @@ public class EmployeeLoginPage implements ActionListener{
         p3 = new Panel();
         p4 = new Panel();
         p5 = new Panel();
+        p6 = new Panel();
+        p7 = new Panel();
         
         usernameText = new Label("USERNAME",Label.CENTER);
         usernameInput = new TextField(30);
@@ -80,8 +82,8 @@ public class EmployeeLoginPage implements ActionListener{
         back.addActionListener(this);
         p4.add(login);
         p5.add(back);
-        p6.add(p4);
         p6.add(p5);
+        p6.add(p4);
 
         title = new Label("Employee Login Page");
         title.setFont(new Font("SansSerif", Font.BOLD, 14));
