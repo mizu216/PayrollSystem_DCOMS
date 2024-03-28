@@ -16,8 +16,64 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
 public class HRViewStaffPage implements ActionListener{
+    @Override
+    public void actionPerformed(ActionEvent e){
+        try{
+            if(e.getSource()==back){
+                clearAllRow();
+                x.setVisible(false);
+                Client.hrMainPage.getJFrame().setVisible(true);
+            }
+            else if(e.getSource()==generate){
+                Interface object = (Interface)Naming.lookup("rmi://localhost:1044/payroll");
+                String username = payrollInput.getText();
+                if(object.checkStaffUsername(username)==true){
+                    Client.hrGeneratePayrollPage.setEmployee(username);
+                    clearAllRow();
+                    x.setVisible(false);
+                    Client.hrGeneratePayrollPage.getJFrame().setVisible(true);
+                }
+                else{
+                    JOptionPane.showMessageDialog(x,"Invalid Username");
+                }
+            }
+            else if(e.getSource()==update){
+                Interface object = (Interface)Naming.lookup("rmi://localhost:1044/payroll");
+                String username = payrollInput.getText();
+                if(object.checkStaffUsername(username)==true){
+                    Client.hrUpdateSalaryPage.setEmployee(username);
+                    clearAllRow();
+                    x.setVisible(false);
+                    Client.hrUpdateSalaryPage.getJFrame().setVisible(true);
+                }
+                else{
+                    JOptionPane.showMessageDialog(x,"Invalid Username");
+                }
+            }
+        }
+        
+        catch(Exception ex){
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(x,"Error!!! Please Try Again");
+        }
+    }
     
+    public JFrame getJFrame(){
+        return x;
+    }
+    
+    public DefaultTableModel getTableModel() {
+        return tableModel;
+    }
+    
+    public void clearAllRow(){
+        int row = tableModel.getRowCount();
+        for(int i = 0;i<row;i++){
+            tableModel.removeRow(0);
+        }
+    }
     private JFrame x;
     private Panel p0,p1,p2,p3,p4,p5,p6,p2a;
     private JTable table;
@@ -81,65 +137,4 @@ public class HRViewStaffPage implements ActionListener{
         x.add(p0,BorderLayout.CENTER);
         x.add(p6,BorderLayout.NORTH);
     }
-    
-    public JFrame getJFrame(){
-        return x;
-    }
-    
-    public DefaultTableModel getTableModel() {
-        return tableModel;
-    }
-    
-    public void clearAllRow(){
-        int row = tableModel.getRowCount();
-        for(int i = 0;i<row;i++){
-            tableModel.removeRow(0);
-        }
-    }
-    
-    @Override
-    public void actionPerformed(ActionEvent e){
-        try{
-            if(e.getSource()==back){
-                clearAllRow();
-                x.setVisible(false);
-                Client.hrMainPage.getJFrame().setVisible(true);
-            }
-            else if(e.getSource()==generate){
-                Interface object = (Interface)Naming.lookup("rmi://localhost:1044/payroll");
-                String username = payrollInput.getText();
-                if(object.checkStaffUsername(username)==true){
-                    Client.hrGeneratePayrollPage.setEmployee(username);
-                    clearAllRow();
-                    x.setVisible(false);
-                    Client.hrGeneratePayrollPage.getJFrame().setVisible(true);
-                }
-                else{
-                    JOptionPane.showMessageDialog(x,"Invalid Username");
-                }
-            }
-            else if(e.getSource()==update){
-                Interface object = (Interface)Naming.lookup("rmi://localhost:1044/payroll");
-                String username = payrollInput.getText();
-                if(object.checkStaffUsername(username)==true){
-                    Client.hrUpdateSalaryPage.setEmployee(username);
-                    clearAllRow();
-                    x.setVisible(false);
-                    Client.hrUpdateSalaryPage.getJFrame().setVisible(true);
-                }
-                else{
-                    JOptionPane.showMessageDialog(x,"Invalid Username");
-                }
-            }
-        }
-        
-        catch(Exception ex){
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(x,"Error!!! Please Try Again");
-        }
-        
-    }
-    
-    
-    
 }

@@ -17,7 +17,37 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 public class HRViewPayrollPage implements ActionListener{
+    @Override
+    public void actionPerformed(ActionEvent e){
+        try{
+            if(e.getSource()==back){
+                clearAllRow();
+                x.setVisible(false);
+                Client.hrMainPage.getJFrame().setVisible(true);
+            }
+        }
+        
+        catch(Exception ex){
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(x,"Error Loading!!!");
+        }
+        
+    }
+        
+    public JFrame getJFrame(){
+        return x;
+    }
     
+    public DefaultTableModel getTableModel() {
+        return tableModel;
+    }
+    
+    public void clearAllRow(){
+        int row = tableModel.getRowCount();
+        for(int i = 0;i<row;i++){
+            tableModel.removeRow(0);
+        }
+    }
     private JFrame x;
     private Panel p0,p1,p2,p3,p4,p5,p6,p2a;
     private JTable table;
@@ -68,39 +98,4 @@ public class HRViewPayrollPage implements ActionListener{
         p3.add(p1);
         x.add(p3,BorderLayout.SOUTH);
     }
-    
-    public JFrame getJFrame(){
-        return x;
-    }
-    
-    public DefaultTableModel getTableModel() {
-        return tableModel;
-    }
-    
-    public void clearAllRow(){
-        int row = tableModel.getRowCount();
-        for(int i = 0;i<row;i++){
-            tableModel.removeRow(0);
-        }
-    }
-    
-    @Override
-    public void actionPerformed(ActionEvent e){
-        try{
-            if(e.getSource()==back){
-                clearAllRow();
-                x.setVisible(false);
-                Client.hrMainPage.getJFrame().setVisible(true);
-            }
-        }
-        
-        catch(Exception ex){
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(x,"Error Loading!!!");
-        }
-        
-    }
-    
-    
-    
 }

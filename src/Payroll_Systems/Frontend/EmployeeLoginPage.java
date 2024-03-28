@@ -47,7 +47,7 @@ public class EmployeeLoginPage implements ActionListener{
         return x;
     }
     private JFrame x;
-    private Panel p0,p1,p2,p3,p4, p5;
+    private Panel p0,p1,p2,p3,p4, p5,p6,p7;
     private Label usernameText,passwordText, title;
     private TextField usernameInput,passwordInput;
     private Button login,back;
@@ -79,16 +79,19 @@ public class EmployeeLoginPage implements ActionListener{
         login.addActionListener(this);
         back.addActionListener(this);
         p4.add(login);
+        p5.add(back);
+        p6.add(p4);
+        p6.add(p5);
 
         title = new Label("Employee Login Page");
         title.setFont(new Font("SansSerif", Font.BOLD, 14));
-        p5.add(title);
+        p7.add(title);
         
         x.setLayout(new GridLayout(4,1));
-        x.add(p5);
+        x.add(p7);
         x.add(p0);
         x.add(p1);
-        x.add(p4);
+        x.add(p6);
         x.getContentPane().setBackground(Color.lightGray);
         x.setVisible(false);
     }
